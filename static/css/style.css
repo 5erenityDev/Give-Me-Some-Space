@@ -1,0 +1,57 @@
+body 
+{
+    background-color: #000003;
+    font-family: "Monaco", monospace;
+    color: #859ccc;
+    text-align: center;
+    font-size: 20px;
+}
+
+#gameWindow 
+{
+    border: 3px solid;
+    font: 30px Arial;
+    color: #bde7fc;
+    text-align: 'center';
+}
+
+h1 
+{
+    font-size: 50px;
+    font-weight: bold;
+    color: #bde7fc;
+}
+
+h2 
+{
+    font-size: 25px;
+    font-weight: bold;
+    color: #a1c3e6;
+}
+
+p 
+{
+    margin-right: 300px;
+    margin-left: 300px;
+    line-height: 20%;
+}
+
+.healing
+{
+    color: lime;
+}
+
+.faster_rotation
+{
+    color: orange;
+}
+
+.turbo
+{
+    color: yellow;
+}
+
+.rapid_fire
+{
+    color: lightgrey;
+}
