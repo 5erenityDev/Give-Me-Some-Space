@@ -17,8 +17,8 @@ function randomlyGenerateEnemy()
         x: (game_width * Math.random()),
         y: (game_height * Math.round(Math.random()))
     };
-    let speed = 1 + getRandomInt(3);
-    let rotation_speed = getRandomInt(3) * 5 + 20;
+    let speed = 10 * getRandomInt(3);
+    let rotation_speed = getRandomInt(3) * 10 + 20;
     let limit = 1 + getRandomInt(3);
     let attack_speed = 1 + getRandomInt(3);
     enemy_list[id] = new Enemy(id, position, speed, rotation_speed, limit, attack_speed);
@@ -59,7 +59,7 @@ function startNewGame()
     player.translation.x = 0;
     player.translation.y = 0;
     player.rotation = 0;
-    player.rotation_speed = 30;
+    player.rotation_speed = 500;
     player.hp = 3;
     player.score = 0;
     power.rotation_timer = 0;
@@ -151,15 +151,15 @@ class Player
             y: 0
         };
         this.rotation = 0;
-        this.speed = 5;
-        this.rotation_speed = 50;
+        this.speed = 50;
+        this.rotation_speed = 500;
         this.limit = 10;
         this.turbo = 30;
         this.color = 'WHITE';
         this.hp = 3;
         this.score = 0;
         this.inv_frames = 100;
-        this.attack_speed = 1;
+        this.attack_speed = 100;
         this.next_bullet = 0;
         this.tag = 'player';
     }
@@ -192,8 +192,8 @@ class Player
         //initialize acceleration variable
         this.acceleration =
         {
-            x: this.speed * 0.2 * Math.cos((this.rotation - 90) * (Math.PI / 180)) / delta_time,
-            y: this.speed * 0.2 * Math.sin((this.rotation - 90) * (Math.PI / 180)) / delta_time
+            x: this.speed * 0.2 * Math.cos((this.rotation - 90) * (Math.PI / 180)) * delta_time,
+            y: this.speed * 0.2 * Math.sin((this.rotation - 90) * (Math.PI / 180)) * delta_time
         };
 
         if (this.rotation >= 360)
@@ -203,9 +203,9 @@ class Player
 
         //calculates roatation
         if (input.left)
-            this.rotation -= this.rotation_speed / delta_time;
+            this.rotation -= this.rotation_speed * delta_time;
         else if (input.right)
-            this.rotation += this.rotation_speed / delta_time;
+            this.rotation += this.rotation_speed * delta_time;
 
         //detects input for forwards/backwards movement and generates momentum
         if (input.up)
@@ -371,8 +371,8 @@ class Enemy
         //initialize acceleration variable
         this.acceleration =
         {
-            x: this.speed * 0.2 * Math.cos((this.rotation - 90) * (Math.PI / 180)) / delta_time,
-            y: this.speed * 0.2 * Math.sin((this.rotation - 90) * (Math.PI / 180)) / delta_time
+            x: this.speed * 0.2 * Math.cos((this.rotation - 90) * (Math.PI / 180)) * delta_time,
+            y: this.speed * 0.2 * Math.sin((this.rotation - 90) * (Math.PI / 180)) * delta_time
         };
 
         //calculates if the rotation has gone over 360, if so it will set it back to zero
@@ -385,30 +385,30 @@ class Enemy
         if (player.position.x >= this.position.x && player.position.y <= this.position.y)             //quadrant 1
         {
             if (this.rotation >= 225 && this.rotation >= 0 || this.rotation >= -135 && this.rotation <= 0 || this.rotation >= 0 && this.rotation <= 45 || this.rotation >= -360 && this.rotation <= -315)
-                this.rotation += this.rotation_speed / delta_time;
+                this.rotation += this.rotation_speed * delta_time;
             else
-                this.rotation -= this.rotation_speed / delta_time;
+                this.rotation -= this.rotation_speed * delta_time;
         }
         else if (player.position.x <= this.position.x && player.position.y <= this.position.y)        //quadrant 2
         {
             if (this.rotation >= -225 && this.rotation <= -45 || this.rotation >= 135 && this.rotation <= 315)
-                this.rotation += this.rotation_speed / delta_time;
+                this.rotation += this.rotation_speed * delta_time;
             else
-                this.rotation -= this.rotation_speed / delta_time;
+                this.rotation -= this.rotation_speed * delta_time;
         }
         else if (player.position.x <= this.position.x && player.position.y >= this.position.y)        //quadrant 3
         {
             if (this.rotation <= 225 && this.rotation >= 45 || this.rotation <= -135 && this.rotation >= -315)
-                this.rotation += this.rotation_speed / delta_time;
+                this.rotation += this.rotation_speed * delta_time;
             else
-                this.rotation -= this.rotation_speed / delta_time;
+                this.rotation -= this.rotation_speed * delta_time;
         }
         else if (player.position.x >= this.position.x && player.position.y >= this.position.y)        //quadrant 4
         {
             if (this.rotation <= -225 && this.rotation >= -360 || this.rotation <= 135 && this.rotation >= 0 || this.rotation >= -45 && this.rotation <= 0 || this.rotation >= 315 && this.rotation <= 360)
-                this.rotation += this.rotation_speed / delta_time;
+                this.rotation += this.rotation_speed * delta_time;
             else
-                this.rotation -= this.rotation_speed / delta_time;
+                this.rotation -= this.rotation_speed * delta_time;
         }
 
         //detects input for forwards/backwards movement and generates momentum
@@ -506,8 +506,8 @@ class Bullet
     movement(delta_time)
     {
         //updates the players position by adding the amount it needs to be translated
-        this.position.x += this.speed.x / delta_time;
-        this.position.y += this.speed.y / delta_time;
+        this.position.x += this.speed.x * delta_time;
+        this.position.y += this.speed.y * delta_time;
     }
 
     edges()
@@ -656,37 +656,37 @@ class Power
         if (this.thruster_timer > 0)
             this.thruster()
         else
-            player.speed = 5;
+            player.speed = 15;
         if (this.rotation_timer > 0)
             this.rotation()
         else
-            player.rotation_speed = 50;
+            player.rotation_speed = 200;
         if (this.rapidfire_timer > 0)
             this.rapidfire()
         else
-            player.attack_speed = 1
+            player.attack_speed = 500
         
     }
 
     rotation()
     {
         this.rotation_timer--;
-        player.rotation_speed = 100;
+        player.rotation_speed = 500;
     }
 
     thruster()
     {
         if (input.turbo)
-            player.speed = 10;
+            player.speed = 20;
         else
-            player.speed = 5;
+            player.speed = 15;
         this.thruster_timer--;
     }
 
     rapidfire()
     {
         this.rapidfire_timer--;
-        player.attack_speed = 5;
+        player.attack_speed = 500;
     }
 
 }
@@ -735,20 +735,21 @@ let collision = new Collision();
 let power = new Power();
 new InputHandler();
 
+//let previous_time = performance.now();
 
+let lastTime = 0;
 /*//////////////////////////////////////
                GAME LOOP
 //////////////////////////////////////*/
 
 function gameLoop(timestamp)
 {
-    //framerate calculation
-    let delta_time = timestamp - last_time;
-    last_time = timestamp;
-
-    if (isNaN(delta_time))
-        delta_time = 1;
-
+    const delta_time = (timestamp - lastTime) / 1000;
+    lastTime = timestamp;
+    //const current_time = performance.now();
+    //const delta_time = (current_time - previous_time) * 0.01;
+    //previous_time = current_time;
+    console.log(delta_time)
     //clear screen to create new objects
     ctx.clearRect(0, 0, game_width, game_height);
 
@@ -871,7 +872,7 @@ function gameLoop(timestamp)
     else if (player.inv_frames <= 0)
         player.inv_frames = 100;    
 
-    player.next_bullet += player.attack_speed;
+    player.next_bullet += player.attack_speed * delta_time;
 
     if (input.shoot && player.next_bullet > 50)
     {
